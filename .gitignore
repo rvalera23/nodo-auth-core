@@ -1,0 +1,17 @@
+# 1. Variables de entorno (¡CRÍTICO! Aquí están tus contraseñas)
+.env
+
+# 2. Carpetas de datos (bases de datos no deben subirse)
+postgres_data/
+mariadb_data/
+mongo_data/
+
+# 3. Archivos temporales de sistema y editores
+.DS_Store
+*.swp
+*.bak
+*~
+
+# 4. Logs
+*.log
+
