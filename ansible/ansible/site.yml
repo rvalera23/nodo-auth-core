@@ -1,0 +1,41 @@
+---
+- name: Instalación y Configuración Automática de Nodo Auth Core
+  hosts: all
+  become: yes
+  tasks:
+    - name: FASE 1 - Instalacion de Docker y dependencias
+      apt:
+        name:
+          - docker.io
+          - docker-compose
+          - python3-pip
+          - curl
+          - git
+        state: present
+        update_cache: yes
+
+    - name: FASE 2 - Creacion de carpetas de estructura Auth
+      file:
+        path: "/opt/servicios/nodo-auth-core/{{ item }}"
+        state: directory
+        mode: '0755'
+        owner: "1000"
+        group: "1000"
+      with_items:
+        - configs/media
+        - configs/templates
+        - backups
+
+    - name: FASE 3 - Sincronizar configuraciones base
+      copy:
+        src: "../configs/"
+        dest: "/opt/servicios/nodo-auth-core/configs/"
+        mode: '0644'
+
+    - name: FASE 4 - Pull de imagenes para Authentik
+      shell: "docker pull {{ item }}"
+      with_items:
+        - "ghcr.io/goauthentik/server:2024.6.1"
+
+    - name: FASE 5 - Levantar servicios de Autenticacion
+      shell: "cd /opt/servicios/nodo-auth-core && docker compose up -d"

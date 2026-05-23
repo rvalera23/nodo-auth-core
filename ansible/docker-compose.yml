@@ -1,6 +1,8 @@
+version: '3.4'
+
 services:
   server:
-    image: ghcr.io/goauthentik/server:2026.5.0
+    image: ghcr.io/goauthentik/server:2024.6.1
     container_name: auth-server
     restart: unless-stopped
     command: server
@@ -15,13 +17,12 @@ services:
       - ./configs/media:/media
       - ./configs/templates:/templates
     ports:
-      - "9005:9000"
-      - "9445:9443"
+      - "9000:9000"
     networks:
-      - nodo_proxy_network
+      - proxy
 
   worker:
-    image: ghcr.io/goauthentik/server:2026.5.0
+    image: ghcr.io/goauthentik/server:2024.6.1
     container_name: auth-worker
     restart: unless-stopped
     command: worker
@@ -36,8 +37,8 @@ services:
       - ./configs/media:/media
       - ./configs/templates:/templates
     networks:
-      - nodo_proxy_network # Cambiado de 'proxy' a 'nodo_proxy_network'
+      - proxy
 
 networks:
-  nodo_proxy_network:
+  proxy:
     external: true
